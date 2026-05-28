@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathfinder Hub</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23032D42'/%3E%3Ctext x='50' y='75' font-size='70' font-weight='700' text-anchor='middle' fill='%2363DF4E' font-family='Arial,sans-serif'%3EP%3C/text%3E%3C/svg%3E">
+  <style>
+    @font-face {
+      font-family: 'ServiceNow Sans';
+      src: url('https://www.servicenow.com/etc.clientlibs/snc/clientlibs/base/resources/fonts/ServiceNowSans-Regular.woff2') format('woff2');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'ServiceNow Sans';
+      src: url('https://www.servicenow.com/etc.clientlibs/snc/clientlibs/base/resources/fonts/ServiceNowSans-Bold.woff2') format('woff2');
+      font-weight: 700;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'ServiceNow Sans', -apple-system, sans-serif;
+      background: linear-gradient(135deg, #032D42 0%, #1a4d5e 100%);
+      color: #ffffff;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      background: rgba(3, 45, 66, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid #63DF4E;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      margin: -20px -20px 20px -20px;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav-logo svg {
+      width: 40px;
+      height: 48px;
+      filter: drop-shadow(0 0 10px rgba(99, 223, 78, 0.4));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #63DF4E;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      background: #63DF4E;
+      color: #032D42;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(99, 223, 78, 0.3);
+      white-space: nowrap;
+    }
+
+    .download-btn:hover {
+      background: #52B8FF;
+      color: #032D42;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(82, 184, 255, 0.4);
+    }
+
+    .download-btn svg {
+      flex-shrink: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      border-bottom: 3px solid #63DF4E;
+      margin-bottom: 40px;
+    }
+
+    .header-logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .header-logo-container svg {
+      width: 80px;
+      height: 96px;
+      filter: drop-shadow(0 0 15px rgba(99, 223, 78, 0.5));
+    }
+
+    header h1 {
+      font-size: 3em;
+      margin: 0;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    header p {
+      font-size: 1.2em;
+      color: #52B8FF;
+      font-weight: 300;
+    }
+
+    .status-banner {
+      background: linear-gradient(135deg, #63DF4E 0%, #52B8FF 100%);
+      color: #032D42;
+      padding: 15px 30px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 40px;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .section {
+      margin-bottom: 50px;
+      scroll-margin-top: 100px;
+    }
+
+    .section h2 {
+      color: #52B8FF;
+      font-size: 2em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #52B8FF;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(99, 223, 78, 0.3);
+      border-radius: 12px;
+      padding: 25px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #63DF4E;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(99, 223, 78, 0.2);
+    }
+
+    .card h3 {
+      color: #63DF4E;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icon {
+      font-size: 1.5em;
+    }
+
+    .card p {
+      margin-bottom: 15px;
+      color: #e0e0e0;
+      flex-grow: 1;
+      font-size: 0.95em;
+    }
+
+    .card a {
+      display: inline-block;
+      background: #63DF4E;
+      color: #032D42;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin-top: auto;
+      text-align: center;
+    }
+
+    .card a:hover {
+      background: #52DF3E;
+      transform: scale(1.05);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .resource-item {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(99, 223, 78, 0.2);
+    }
+
+    .resource-item h4 {
+      color: #63DF4E;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+
+    .resource-item ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .resource-item li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .resource-item li:last-child {
+      border-bottom: none;
+    }
+
+    .resource-item a {
+      color: #52B8FF;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .resource-item a:hover {
+      color: #63DF4E;
+      text-decoration: underline;
+    }
+
+    .note-text {
+      font-size: 0.85em;
+      color: #a0a0a0;
+      font-style: italic;
+      margin-top: 5px;
+      padding-left: 15px;
+    }
+
+    .update-badge {
+      display: inline-block;
+      background: #63DF4E;
+      color: #032D42;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .wip-badge {
+      display: inline-block;
+      background: #FFBC39;
+      color: #032D42;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .milestone {
+      background: rgba(82, 184, 255, 0.1);
+      border: 2px solid rgba(82, 184, 255, 0.3);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+
+    .milestone-header {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    .milestone-header:hover {
+      background: rgba(82, 184, 255, 0.15);
+    }
+
+    .milestone-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+    }
+
+    .milestone-day {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #63DF4E;
+    }
+
+    .milestone-text {
+      font-size: 0.95em;
+      color: #e0e0e0;
+    }
+
+    .milestone-date {
+      font-size: 0.9em;
+      color: #a0a0a0;
+      font-style: italic;
+    }
+
+    .milestone-status {
+      font-size: 0.85em;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-in-progress {
+      background: rgba(82, 184, 255, 0.2);
+      color: #52B8FF;
+      border: 1px solid #52B8FF;
+    }
+
+    .status-planned {
+      background: rgba(255, 188, 57, 0.2);
+      color: #FFB84D;
+      border: 1px solid #FFB84D;
+    }
+
+    .status-completed {
+      background: rgba(99, 223, 78, 0.2);
+      color: #63DF4E;
+      border: 1px solid #63DF4E;
+    }
+
+    .milestone-chevron {
+      font-size: 1.2em;
+      transition: transform 0.3s;
+      color: #52B8FF;
+    }
+
+    .milestone-chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .milestone-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      border-top: 1px solid rgba(82, 184, 255, 0.3);
+    }
+
+    .milestone-content.open {
+      max-height: 2000px;
+    }
+
+    .milestone-tasks {
+      padding: 20px;
+      background: rgba(3, 45, 66, 0.3);
+    }
+
+    .task-item {
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border-left: 4px solid;
+      transition: all 0.2s;
+    }
+
+    .task-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .task-item.completed {
+      border-left-color: #63DF4E;
+      background: rgba(99, 223, 78, 0.08);
+    }
+
+    .task-item.in-progress {
+      border-left-color: #FFB84D;
+      background: rgba(255, 188, 57, 0.08);
+    }
+
+    .task-item.not-started {
+      border-left-color: #FF6B6B;
+      background: rgba(255, 107, 107, 0.08);
+    }
+
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 2px solid;
+      margin-right: 12px;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: middle;
+      position: relative;
+    }
+
+    .task-checkbox.checked {
+      background: #63DF4E;
+      border-color: #63DF4E;
+    }
+
+    .task-checkbox.checked::after {
+      content: '✓';
+      position: absolute;
+      color: #032D42;
+      font-weight: bold;
+      font-size: 14px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .task-checkbox.in-progress {
+      background: transparent;
+      border-color: #FFB84D;
+    }
+
+    .task-checkbox.in-progress::after {
+      content: '▶';
+      position: absolute;
+      color: #FFB84D;
+      font-weight: bold;
+      font-size: 10px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .task-checkbox.not-started {
+      background: transparent;
+      border-color: #FF6B6B;
+    }
+
+    .contact-section {
+      background: rgba(99, 223, 78, 0.1);
+      border: 2px solid #63DF4E;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .contact-section h3 {
+      color: #63DF4E;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .contact-links a {
+      background: #032D42;
+      color: #63DF4E;
+      padding: 12px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      border: 2px solid #63DF4E;
+      transition: all 0.3s ease;
+    }
+
+    .contact-links a:hover {
+      background: #63DF4E;
+      color: #032D42;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 2px solid rgba(99, 223, 78, 0.3);
+      color: #a0a0a0;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .quick-links, .resources-grid { grid-template-columns: 1fr; }
+    }
+
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body>
+
+  <div class="nav-wrapper">
+    <nav>
+      <a href="#top" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="40" height="48">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#63DF4E"/>
+              <stop offset="100%" stop-color="#52B8FF"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00C9A7"/>
+              <stop offset="100%" stop-color="#006B7E"/>
+            </linearGradient>
+          </defs>
+          <path d="M100 20 L160 100 L100 180 L40 100 Z" fill="url(#g1)" opacity="0.95"/>
+          <path d="M100 50 L140 100 L100 150 L60 100 Z" fill="url(#g2)" opacity="0.85"/>
+          <circle cx="100" cy="100" r="18" fill="#0A1F2E"/>
+          <circle cx="100" cy="100" r="9" fill="#63DF4E"/>
+          <circle cx="90" cy="195" r="9" fill="none" stroke="#63DF4E" stroke-width="2"/>
+          <circle cx="75" cy="210" r="7" fill="none" stroke="#63DF4E" stroke-width="1.5"/>
+          <circle cx="62" cy="222" r="5" fill="none" stroke="#63DF4E" stroke-width="1.5"/>
+        </svg>
+        <span>Pathfinder</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <ul class="nav-links">
+          <li><a href="#what">What is Pathfinder</a></li>
+          <li><a href="#quick-start">Quick Start</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#milestones">Milestones and Status</a></li>
+        </ul>
+        <a href="https://servicenow.sharepoint.com/:u:/s/GlobalSNUConsultants/IQAGNah1-QyLQrSQMTxFPNzdAWdHy1doRKtmZNrumkmt7Tc?e=HTOimN" target="_blank" rel="noopener noreferrer" class="download-btn" title="Click button in SharePoint, then download file">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Latest Version
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div id="top"></div>
+    
+    <header>
+      <div class="header-logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="80" height="96">
+          <defs>
+            <linearGradient id="g1h" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#63DF4E"/>
+              <stop offset="100%" stop-color="#52B8FF"/>
+            </linearGradient>
+            <linearGradient id="g2h" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00C9A7"/>
+              <stop offset="100%" stop-color="#006B7E"/>
+            </linearGradient>
+          </defs>
+          <path d="M100 20 L160 100 L100 180 L40 100 Z" fill="url(#g1h)" opacity="0.95"/>
+          <path d="M100 50 L140 100 L100 150 L60 100 Z" fill="url(#g2h)" opacity="0.85"/>
+          <circle cx="100" cy="100" r="18" fill="#0A1F2E"/>
+          <circle cx="100" cy="100" r="9" fill="#63DF4E"/>
+          <circle cx="90" cy="195" r="9" fill="none" stroke="#63DF4E" stroke-width="2"/>
+          <circle cx="75" cy="210" r="7" fill="none" stroke="#63DF4E" stroke-width="1.5"/>
+          <circle cx="62" cy="222" r="5" fill="none" stroke="#63DF4E" stroke-width="1.5"/>
+        </svg>
+        <h1>Pathfinder Hub</h1>
+      </div>
+      <p>Training Health & Readiness Assessment Tool | Central Command</p>
+    </header>
+
+    <div class="status-banner">
+      🚀 PILOT ACTIVE | Building the Native SNU Future
+    </div>
+
+    <!-- What is Pathfinder -->
+    <div class="section" id="what">
+      <h2>What is Pathfinder</h2>
+      <p style="font-size: 1.1em; color: #e0e0e0; margin-bottom: 20px;">
+        Pathfinder is an internal Training Health & Readiness Assessment tool that makes invisible training gaps visible—helping SNUCs prepare better, Training Admins act faster, and CSMs/CSEs use training health as a leading indicator of customer success.
+      </p>
+      <div style="background: rgba(255, 188, 57, 0.15); border-left: 4px solid #FFB84D; border-radius: 8px; padding: 20px; margin-top: 20px;">
+        <h3 style="color: #FFB84D; margin-bottom: 10px;">You are a co-creator</h3>
+        <p style="color: #e0e0e0;">Pathfinder is in pilot. We're collecting requirements from internal stakeholders and customers to inform the development of a native SNU version. Your usage, feedback, and customer insights are the foundation of the business case that will bring this into SNU natively.</p>
+      </div>
+    </div>
+
+    <!-- Quick Start -->
+    <div class="section" id="quick-start">
+      <div class="quick-links">
+        <div class="card">
+          <h3><span class="card-icon">📊</span>Quick Start Guide</h3>
+          <p>Refer to this Quick Reference Guide to get you started with Pathfinder</p>
+          <a href="https://servicenow.sharepoint.com/sites/GlobalSNUConsultants/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FGlobalSNUConsultants%2FShared%20Documents%2F4%2E%20Proposals%2C%20Templates%20and%20Tools%2F7%2E%20Pathfinder%2FPathfinder%20%2D%20Quick%20Reference%20Guide%2Epdf&parent=%2Fsites%2FGlobalSNUConsultants%2FShared%20Documents%2F4%2E%20Proposals%2C%20Templates%20and%20Tools%2F7%2E%20Pathfinder&p=true&ga=1" target="_blank" rel="noopener noreferrer">Open Guide →</a>
+        </div>
+
+        <div class="card">
+          <h3><span class="card-icon">📋</span>Submit Feedback</h3>
+          <p>Feature requests, bug reports, pilot nominations, customer reactions</p>
+          <a href="https://forms.office.com/pages/responsepage.aspx?id=cPHPi3mZHkmGg9jO0IULrcy9IEXPLChLqHd0YyF1j8tUNjgxM09CVVZJNk1CMEczMEFYMUpaVlNRNC4u&route=shorturl" target="_blank" rel="noopener noreferrer">Open Intake Form →</a>
+        </div>
+
+        <div class="card">
+          <h3><span class="card-icon">📚</span>SOP & FAQs</h3>
+          <p>How to use, what to show, how to position, what not to promise</p>
+          <a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQA-cXfOzEpWS54MuI8cweBcAYHsBs0hYzahe-__3Npv3m0?e=8Flpuu" target="_blank" rel="noopener noreferrer">Read Guidelines →</a>
+        </div>
+
+        <div class="card">
+          <h3><span class="card-icon">📄</span>Weekly Status Report</h3>
+          <p>Weekly Status Report</p>
+          <a href="https://servicenow.sharepoint.com/:w:/s/GlobalSNUConsultants/IQD9S44A2zHJRowhU-8toB9dAS4GAWHLj0HDmIrT28xhfcI?e=bGqWxg" target="_blank" rel="noopener noreferrer">View Report →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources & Documentation -->
+    <div class="section" id="resources">
+      <h2>📦 Resources & Documentation</h2>
+      <div class="resources-grid">
+        <div class="resource-item">
+          <h4>Getting Started</h4>
+          <ul>
+            <li><a href="https://servicenow.sharepoint.com/:b:/s/GlobalSNUConsultants/IQAVKPF8nGVbSaQZyKG4vb2XAdzDXHYta_sIXUYfi_F9N8c?e=RylJHO" target="_blank" rel="noopener noreferrer">Quick Start Guide</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQA-cXfOzEpWS54MuI8cweBcAYHsBs0hYzahe-__3Npv3m0?e=8Flpuu" target="_blank" rel="noopener noreferrer">SOP & FAQs</a></li>
+            <li>
+              <a href="https://servicenow.sharepoint.com/:u:/s/GlobalSNUConsultants/IQBbr4D2hEV2QYNzG5AVkCS_AXXIbVdXS31qCjDCn4hUd1M?e=9Haa8n" target="_blank" rel="noopener noreferrer">Pathfinder Guide</a>
+              <div class="note-text">Download file for best experience</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="resource-item">
+          <h4>Training & Enablement</h4>
+          <ul>
+            <li><a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQBnJ-H6FCpCQI-k-s7vEjMxAbc6Y-byURIdf_WFeRYTFzs?e=mnnTzz" target="_blank" rel="noopener noreferrer">Pathfinder Value Summary</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:f:/s/GlobalSNUConsultants/IgByUrWp2KHMT4pzBymeJoZaAb9uF6AcO8xSX5-lr6WYliM?e=oab0QL" target="_blank" rel="noopener noreferrer">Recorded Enablement Sessions</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQDKwWfXStVuRqMOewXswbfhAelJ0vA5qkytcchg9B-zb-Y?e=Rz6tHO" target="_blank" rel="noopener noreferrer">SNU Value Realization Journey <span class="wip-badge">WIP</span></a></li>
+          </ul>
+        </div>
+
+        <div class="resource-item">
+          <h4>Governance & Planning</h4>
+          <ul>
+            <li><a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQCbVrhBkKLRS61HtWtLvrzMAXzRkl6blrtH87l-zmmTegM?e=HwtBti" target="_blank" rel="noopener noreferrer">100-Day Scale Plan</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQBCjoMekKzuQ68_TrZGTK47AciO5VmGR3O9HFLz8Ta21iU?e=h82UUQ" target="_blank" rel="noopener noreferrer">Governance Board Charter</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:x:/s/GlobalSNUConsultants/EfKoGX1vG_VBpDfctzHG2_0BwECOxthkWHlgRgU0UZPZ7g?e=3E5TTe" target="_blank" rel="noopener noreferrer">Development Backlog</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:p:/s/GlobalSNUConsultants/IQBQuWQf2PtiRoXDT8OSWZ6JAQTj0J2I2C09uRr8AKe253s?e=mi9WRr" target="_blank" rel="noopener noreferrer">Customer Pilot Design Doc</a></li>
+          </ul>
+        </div>
+
+        <div class="resource-item">
+          <h4>Latest Updates</h4>
+          <ul>
+            <li><a href="https://servicenow.sharepoint.com/:u:/s/GlobalSNUConsultants/IQDf-pl7Wy2dQZPqOXz4OdTBAcb5MDahg4rcJYLUeESnlII?e=ei8cSF" target="_blank" rel="noopener noreferrer">Version 6.5.1 Release Notes <span class="update-badge">NEW</span></a></li>
+            <li><a href="https://servicenow.sharepoint.com/:u:/s/GlobalSNUConsultants/IQDoo91wKyzbR7POjU2xDIy4AVulBGwnhn5A3Ie9jvs5VBY?e=Qb77qs" target="_blank" rel="noopener noreferrer">Feature Summary</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:x:/s/GlobalSNUConsultants/IQChjDV4nci2TaiQRuCpgv48ASVLZS3B9Jo101qvSA5niI4?e=tNEtp7" target="_blank" rel="noopener noreferrer">100-Day Tracker (Excel)</a></li>
+            <li><a href="https://servicenow.sharepoint.com/:x:/s/GlobalSNUConsultants/IQAmlV8b89r1Q423rcvxjbvzAWDEg2hZA5YU1EFRGR-Tn6w?e=Id2ge8" target="_blank" rel="noopener noreferrer">Development Backlog (Excel)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Milestones and Status -->
+    <div class="section" id="milestones">
+      <h2>🎯 Milestones and Status</h2>
+      <p style="text-align: center; color: #52B8FF; margin-bottom: 30px; font-size: 1.1em;">Our journey from pilot to native SNU integration</p>
+
+      <div class="milestone">
+        <div class="milestone-header" onclick="toggleMilestone('day_10')">
+          <div class="milestone-title">
+            <div>
+              <div class="milestone-day">Day 10</div>
+              <div class="milestone-date">May 20 - May 29, 2026</div>
+            </div>
+            <div class="milestone-text">5/16 tasks complete (31%)</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span class="milestone-status status-in-progress">In Progress</span>
+            <span class="milestone-chevron">▼</span>
+          </div>
+        </div>
+        <div class="milestone-content" id="day_10-content">
+          <div class="milestone-tasks">
+            
+            <div class="task-item completed">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox checked"></div>
+                <div style="flex: 1;">
+                  <div>Build Pathfinder Hub HTML (SharePoint)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item completed">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox checked"></div>
+                <div style="flex: 1;">
+                  <div>Set up #pathfinder Teams channel</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item completed">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox checked"></div>
+                <div style="flex: 1;">
+                  <div>Create MS Form intake process</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item completed">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox checked"></div>
+                <div style="flex: 1;">
+                  <div>Publish all governance docs to Pathfinder Hub</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item completed">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox checked"></div>
+                <div style="flex: 1;">
+                  <div>Create Weekly status report</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Schedule 6 office hours sessions (Weeks 4-8)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Draft Governance Board charter</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Confirm Governance Board membership </div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Mike | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Set up SharePoint backlog for feature requests</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Create SNUC Guiding Principles document</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Create positioning scripts for SNUCs</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Recruit 2-3 SNUCs for Working Group</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Both | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Schedule SNUC re-enablement session (60 min live)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>SNU Product Team engagement </div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Governance Board first meeting</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Both | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Create SOP doc/checklist</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-header" onclick="toggleMilestone('day_30')">
+          <div class="milestone-title">
+            <div>
+              <div class="milestone-day">Day 30</div>
+              <div class="milestone-date">May 30 - June 18, 2026</div>
+            </div>
+            <div class="milestone-text">1/9 tasks complete (11%)</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span class="milestone-status status-in-progress">In Progress</span>
+            <span class="milestone-chevron">▼</span>
+          </div>
+        </div>
+        <div class="milestone-content" id="day_30-content">
+          <div class="milestone-tasks">
+            
+            <div class="task-item completed">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox checked"></div>
+                <div style="flex: 1;">
+                  <div>SNUC LT meeting - discuss, demo, capture asks</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item in-progress">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox in-progress"></div>
+                <div style="flex: 1;">
+                  <div>Finalize customer pilot design (duration, success metrics, criteria)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Working Group | Status: In Progress
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Working Group kickoff meeting</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Both | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Office Hours sessions commenced</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Both | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Deliver live SNUC re-enablement sessions for all regions</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Publish enablement recordings to Hub</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Working Group operational and meeting regularly</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Both | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>SNUCs nominate pilot participants via intake form</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: SNUCs | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Governance Board selects 5-8 pilot customers</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Gov Board | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-header" onclick="toggleMilestone('day_60')">
+          <div class="milestone-title">
+            <div>
+              <div class="milestone-day">Day 60</div>
+              <div class="milestone-date">June 19 - July 18, 2026</div>
+            </div>
+            <div class="milestone-text">0/2 tasks complete (0%)</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span class="milestone-status status-planned">Planned</span>
+            <span class="milestone-chevron">▼</span>
+          </div>
+        </div>
+        <div class="milestone-content" id="day_60-content">
+          <div class="milestone-tasks">
+            
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Pilot onboarding and kickoff (Week 8)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Mid-pilot feedback check-in (Week 10)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Working Group | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-header" onclick="toggleMilestone('day_90')">
+          <div class="milestone-title">
+            <div>
+              <div class="milestone-day">Day 90</div>
+              <div class="milestone-date">July 19 - August 17, 2026</div>
+            </div>
+            <div class="milestone-text">0/4 tasks complete (0%)</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span class="milestone-status status-planned">Planned</span>
+            <span class="milestone-chevron">▼</span>
+          </div>
+        </div>
+        <div class="milestone-content" id="day_90-content">
+          <div class="milestone-tasks">
+            
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Pilot close-out and exit interviews (Week 13)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Compile pilot report (NPS, testimonials, feedback)</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Fletcher | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Deliver report and master requirements doc to GLD leadership and SNU Product team</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Working Group | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="task-item not-started">
+              <div style="display: flex; align-items: center; flex: 1;">
+                <div class="task-checkbox not-started"></div>
+                <div style="flex: 1;">
+                  <div>Schedule SNU Product roadmap discussion</div>
+                  <div style="font-size: 0.85em; color: #a0a0a0; margin-top: 4px;">
+                    Owner: Both | Status: Not Started
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>    </div>
+
+    <!-- Contact -->
+    <div class="contact-section">
+      <h3>Need Help? Get In Touch</h3>
+      <p>Your feedback shapes Pathfinder's future. Don't wait — reach out now.</p>
+      <div class="contact-links">
+        <a href="https://teams.microsoft.com/l/channel/19%3AmvvlUUZlnlhVmhXTGD8_9VNrxROKKp6JdAz1cPqiEUY1%40thread.tacv2/General?groupId=4a0af625-b15f-4dda-920c-5e8c26074cfe&tenantId=8bcff170-9979-491e-8683-d8ced0850bad" target="_blank" rel="noopener noreferrer">Pathfinder Teams Channel</a>
+        <a href="https://forms.office.com/pages/responsepage.aspx?id=cPHPi3mZHkmGg9jO0IULrcy9IEXPLChLqHd0YyF1j8tUNjgxM09CVVZJNk1CMEczMEFYMUpaVlNRNC4u&route=shorturl" target="_blank" rel="noopener noreferrer">Submit Feedback Form</a>
+      </div>
+    </div>
+
+    <footer>
+      <p><strong>Pathfinder Hub</strong> | Owned by Fletcher Hall (lead) & Mike Dyson (lead) | Martin Hill (exec sponsor)</p>
+      <p>Last updated: May 2026 | Next update: Weekly | Version: 1.0</p>
+      <p>This is an internal pilot tool. Not for external distribution.</p>
+    </footer>
+  </div>
+
+  <script>
+    function toggleMilestone(id) {
+      const content = document.getElementById(id + '-content');
+      const chevron = event.currentTarget.querySelector('.milestone-chevron');
+      
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        chevron.classList.remove('open');
+      } else {
+        document.querySelectorAll('.milestone-content').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('.milestone-chevron').forEach(ch => ch.classList.remove('open'));
+        
+        content.classList.add('open');
+        chevron.classList.add('open');
+      }
+    }
+
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        if (scrollY >= sectionTop && scrollY < sectionBottom) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      if (!current && scrollY < 300) {
+        current = 'what';
+      }
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href').substring(1);
+        if (href === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
